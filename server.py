@@ -1,6 +1,7 @@
 import os
 
-from os import getcwd, listdir
+from datetime import datetime
+from os import getcwd, listdir, remove
 from tomlstore import toml_to_dict, store_object_as_toml
 
 class TomlServer:
@@ -14,8 +15,15 @@ class TomlServer:
         else:
             self.storage_data = {}
 
-    def store(self, d: dict):
-        pass
+    def store(self, d: dict, name) -> None:
+        store_object_as_toml(d, f"{self.path}/{name}")
+        self.storage_data[name] = datetime.utcnow()
 
-    def retrieve(self, name: str):
-        pass
+    def retrieve(self, name: str) -> dict:
+        return toml_to_dict(f"{self.path}/{name}")
+
+    def remove(self, name: str) -> None:
+        remove(f"{self.path}/{name}")
+
+    def __del__(self):
+        store_object_as_toml(self.storage_data, self.metadata_path)
