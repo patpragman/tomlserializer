@@ -23,6 +23,7 @@ class TomlServer:
         return toml_to_dict(f"{self.path}/{name}")
 
     def remove(self, name: str) -> None:
+        del self.storage_data[name]
         remove(f"{self.path}/{name}")
 
     def __del__(self):
